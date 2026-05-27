@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panel Directora - InstitutoEdu</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+  <style>
+    :root {
+      --naranja: #D35400;
+      --blanco: #FFFFFF;
+      --gris-10: #F8F7F5;
+      --gris-20: #EEECE8;
+      --negro: #1A1917;
+    }
+    body { font-family: sans-serif; background: var(--gris-10); margin: 0; padding: 20px; color: var(--negro); }
+    .header { display: flex; justify-content: space-between; align-items: center; background: var(--blanco); padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+    h1 { color: var(--naranja); margin: 0; }
+    .btn-logout { background: #c0392b; color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px; }
+    .card { background: var(--blanco); padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+    h3 { border-bottom: 2px solid var(--naranja); padding-bottom: 5px; margin-top: 0; }
+    .form-group { margin-bottom: 15px; }
+    label { display: block; font-weight: bold; margin-bottom: 5px; }
+    input, select { width: 100%; padding: 8px; border: 1px solid var(--gris-20); border-radius: 4px; box-sizing: border-box; }
+    button.btn-primary { background: var(--naranja); color: white; border: none; padding: 10px 15px; border-radius: 4px; cursor: pointer; font-weight: bold; width: 100%; }
+    button.btn-primary:hover { background: #B94A00; }
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+    th, td { padding: 10px; text-align: left; border-bottom: 1px solid var(--gris-20); }
+    th { background: var(--gris-10); }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <div>
+      <h1>Panel de Dirección 👑</h1>
+      <p id="bienvenida">Cargando datos de directora...</p>
+    </div>
+    <button class="btn-logout" onclick="cerrarSesion()">Cerrar Sesión</button>
+  </div>
+
+  <div class="grid">
+    <!-- GESTOR DE CUOTAS Y DESCUENTOS -->
+    <div class="card">
+      <h3>Control de Finanzas (Cobros y Descuentos)</h3>
+      <form id="form-cuota" onsubmit="asignarCuota(event)">
+        <div class="form-group">
+          <label>ID del Alumno / Tutor</label>
+          <input type="text" id="cuota-alumno" placeholder="UUID del alumno o tutor" required>
+        </div>
+        <div class="form-group">
+          <label>Monto Base ($)</label>
+          <input type="number" id="cuota-monto" placeholder="Ej: 5000" required>
+        </div>
+        <div class="form-group">
+          <label>Descuento Aplicado (%)</label>
+          <input type="number" id="cuota-descuento" placeholder="Ej: 10" value="0">
+        </div>
+        <button type="submit" class="btn-primary">Asignar y Notificar Cuota</button>
+      </form>
+    </div>
+
+    <!-- GESTOR DE HORARIOS -->
+    <div class="card">
+      <h3>Gestor de Horarios Institucionales</h3>
+      <form id="form-horario" onsubmit="crearHorario(event)">
+        <div class="form-group">
+          <label>Materia / Curso</label>
+          <input type="text" id="h-materia" placeholder="Ej: Matemática 1° Año" required>
+        </div>
+        <div class="form-group">
+          <label>Día de la semana</label>
+          <select id="h-dia">
+            <option>Lunes</option><option>Martes</option><option>Miércoles</option><option>Jueves</option><option>Viernes</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Hora Inicio y Fin</label>
+          <input type="text" id="h-tiempo" placeholder="Ej: 08:00 a 09:30" required>
+        </div>
+        <button type="submit" class="btn-primary">Publicar Horario</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // Configura tus credenciales reales aquí
+    const SUPABASE_URL = 'TU_SUPABASE_URL';
+    const SUPABASE_ANON_KEY = 'TU_SUPABASE_ANON_KEY';
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    // Verificar que sea Directora
+    async function verificarAcceso() {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) { window.location.href = '../../index.html'; return; }
+      
+      const { data: usuario } = await supabase.from('usuarios').select('*').eq('id', session.user.id).single();
+      if (!usuario || usuario.role !== 'directora') {
+        alert('Acceso denegado. No eres Directora.');
+        window.location.href = '../../index.html';
+      } else {
+        document.getElementById('bienvenida').textContent = `Bienvenida, ${usuario.nombre}. Control total activado.`;
+      }
+    }
+    verificarAcceso();
+
+    async function asignarCuota(e) {
+      e.preventDefault();
+      const alumno = document.getElementById('cuota-alumno').value;
+      const monto = document.getElementById('cuota-monto').value;
+      const desc = document.getElementById('cuota-descuento').value;
+      
+      const { error } = await supabase.from('cuotas').insert([{ id_alumno: alumno, monto_base: monto, descuento: desc, estado: 'Pendiente' }]);
+      if(error) alert("Error: " + error.message);
+      else { alert("✓ Cuota asignada con éxito"); document.getElementById('form-cuota').reset(); }
+    }
+
+    async function crearHorario(e) {
+      e.preventDefault();
+      const materia = document.getElementById('h-materia').value;
+      const dia = document.getElementById('h-dia').value;
+      const tiempo = document.getElementById('h-tiempo').value;
+
+      const { error } = await supabase.from('horarios').insert([{ materia, dia_semana: dia, horas: tiempo }]);
+      if(error) alert("Error: " + error.message);
+      else { alert("✓ Horario publicado"); document.getElementById('form-horario').reset(); }
+    }
+
+    async function cerrarSesion() {
+      await supabase.auth.signOut();
+      window.location.href = '../../index.html';
+    }
+  </script>
+</body>
+</html>
