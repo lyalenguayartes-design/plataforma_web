@@ -6,12 +6,10 @@
   <title>Instituto Educativo — Excelencia Académica</title>
   <meta name="description" content="Formando líderes del mañana con educación de calidad, valores y excelencia académica." />
  
-  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
  
-  <!-- Supabase JS SDK -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
  
   <style>
@@ -655,7 +653,7 @@
     }
     .contacto-form textarea:focus {
       border-color: var(--naranja);
-      box-shadow: 0 0 0 3px rgba(211,84,0,0.12);
+      box-shadow: 0 0 0 3px rgba(211, 84, 0, 0.12);
       background: var(--blanco);
     }
  
@@ -713,7 +711,6 @@
 </head>
 <body>
  
-<!-- ===== NAVBAR ===== -->
 <nav class="navbar" id="navbar">
   <div class="contenedor">
     <div class="navbar-inner">
@@ -732,7 +729,7 @@
       </ul>
  
       <div class="nav-acciones">
-        <a href="./src/auth/login.html" class="boton boton-secundario" style="padding: 10px 20px; font-size: 14px;">Iniciar sesión</a>
+        <a href="#form-acceso" class="boton boton-secundario" style="padding: 10px 20px; font-size: 14px;">Iniciar sesión</a>
         <button class="nav-menu-btn" aria-label="Menú">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
@@ -743,7 +740,6 @@
   </div>
 </nav>
  
-<!-- ===== HÉROE ===== -->
 <section class="hero" id="inicio">
   <div class="contenedor">
     <div class="hero-grid">
@@ -777,7 +773,6 @@
       </div>
  
       <div class="hero-imagen">
-        <!-- Reemplazar src con imágenes reales del instituto -->
         <img src="https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=800&q=80" alt="Instalaciones del instituto" />
         <div class="hero-badge">
           <div class="hero-badge-icono">
@@ -793,7 +788,6 @@
   </div>
 </section>
  
-<!-- ===== CARRUSEL ===== -->
 <section id="instalaciones">
   <div class="carrusel-wrapper">
     <div class="carrusel" id="carrusel"
@@ -801,7 +795,6 @@
          aria-label="Galería de instalaciones"
          aria-roledescription="carrusel">
  
-      <!-- SLIDE 1 -->
       <div class="carrusel-slide activo" aria-label="Diapositiva 1 de 5">
         <img src="https://images.unsplash.com/photo-1509062522246-3755977927d7?w=1400&q=80" alt="Aulas modernas y equipadas" />
         <div class="carrusel-overlay"></div>
@@ -812,7 +805,6 @@
         </div>
       </div>
  
-      <!-- SLIDE 2 -->
       <div class="carrusel-slide" aria-label="Diapositiva 2 de 5">
         <img src="https://images.unsplash.com/photo-1544717302-de2939b7ef71?w=1400&q=80" alt="Laboratorio de ciencias" />
         <div class="carrusel-overlay"></div>
@@ -823,7 +815,6 @@
         </div>
       </div>
  
-      <!-- SLIDE 3 -->
       <div class="carrusel-slide" aria-label="Diapositiva 3 de 5">
         <img src="https://images.unsplash.com/photo-1497633762265-9d179a990aa6?w=1400&q=80" alt="Biblioteca y sala de estudio" />
         <div class="carrusel-overlay"></div>
@@ -834,7 +825,6 @@
         </div>
       </div>
  
-      <!-- SLIDE 4 -->
       <div class="carrusel-slide" aria-label="Diapositiva 4 de 5">
         <img src="https://images.unsplash.com/photo-1571260899304-425eee4c7efc?w=1400&q=80" alt="Actividades deportivas" />
         <div class="carrusel-overlay"></div>
@@ -845,7 +835,6 @@
         </div>
       </div>
  
-      <!-- SLIDE 5 -->
       <div class="carrusel-slide" aria-label="Diapositiva 5 de 5">
         <img src="https://images.unsplash.com/photo-1577896851231-70ef18881754?w=1400&q=80" alt="Eventos y actos escolares" />
         <div class="carrusel-overlay"></div>
@@ -856,7 +845,6 @@
         </div>
       </div>
  
-      <!-- Controles -->
       <div class="carrusel-controles" aria-label="Controles del carrusel">
         <button class="carrusel-btn" id="btn-prev" aria-label="Diapositiva anterior">
           <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
@@ -866,16 +854,13 @@
         </button>
       </div>
  
-      <!-- Puntos indicadores -->
       <div class="carrusel-dots" id="carrusel-dots" role="tablist" aria-label="Navegar a diapositiva"></div>
  
-      <!-- Barra de progreso -->
       <div class="carrusel-progreso" id="progreso-bar"></div>
     </div>
   </div>
 </section>
  
-<!-- ===== PROPUESTA DE VALOR ===== -->
 <section class="seccion seccion-gris" id="nosotros">
   <div class="contenedor">
     <div class="animar-entrada">
@@ -916,8 +901,7 @@
   </div>
 </section>
  
-<!-- ===== PORTAL DE ACCESO (Login/Registro) ===== -->
-<section class="seccion">
+<section class="seccion" id="form-acceso">
   <div class="contenedor">
     <div class="acceso-grid">
       <div class="animar-entrada">
@@ -946,7 +930,7 @@
         </div>
       </div>
  
-      <div class="acceso-formulario animar-entrada" id="form-acceso">
+      <div class="acceso-formulario animar-entrada">
         <div class="tabs">
           <button class="tab activa" id="tab-login" onclick="cambiarTab('login')">Iniciar sesión</button>
           <button class="tab" id="tab-registro" onclick="cambiarTab('registro')">Registrarse</button>
@@ -955,7 +939,6 @@
         <div id="alerta-form" class="form-alerta" role="alert"></div>
         <div id="cargando" class="form-cargando">⏳ Procesando...</div>
  
-        <!-- FORMULARIO LOGIN -->
         <div id="panel-login">
           <p class="form-subtitulo">Ingresá con tu cuenta institucional</p>
           <div class="form-grupo">
@@ -974,7 +957,6 @@
           </div>
         </div>
  
-        <!-- FORMULARIO REGISTRO -->
         <div id="panel-registro" style="display:none;">
           <p class="form-subtitulo">Creá tu cuenta como tutor/apoderado</p>
           <div class="form-grupo">
@@ -1001,7 +983,6 @@
   </div>
 </section>
  
-<!-- ===== CONTACTO ===== -->
 <section class="seccion seccion-gris" id="contacto">
   <div class="contenedor">
     <div class="contacto-grid">
@@ -1074,7 +1055,6 @@
   </div>
 </section>
  
-<!-- ===== FOOTER ===== -->
 <footer class="footer">
   <div class="contenedor">
     <div class="footer-grid">
@@ -1118,15 +1098,12 @@
   </div>
 </footer>
  
-<!-- ===== SCRIPTS ===== -->
 <script>
- // ============================================================
+  // ============================================================
   // CONFIGURACIÓN SUPABASE
   // ============================================================
   const SUPABASE_URL = 'https://niocbjukflwlytzxjwqk.supabase.co';         
   const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5pb2NianVrZmx3bHl0enhqd3FrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk4ODIyMjYsImV4cCI6MjA5NTQ1ODIyNn0.87H3pTRaY994AcXONtdBzxzmX5VExPoELtg6lzyba-U';
-  // Para Netlify, estas variables llegan inyectadas en tiempo de build.
-  // Ver instrucciones de .env al final del README.
   const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
  
   // ============================================================
@@ -1161,16 +1138,22 @@
   function irASlide(n) {
     slides[actualSlide].classList.remove('activo');
     slides[actualSlide].classList.add('saliendo');
-    setTimeout(() => slides[actualSlide === n ? n : actualSlide].classList.remove('saliendo'), 800);
+    setTimeout(() => {
+      if(slides[actualSlide]) slides[actualSlide].classList.remove('saliendo');
+    }, 800);
  
     const dots = dotsContenedor.querySelectorAll('.carrusel-dot');
-    dots[actualSlide].classList.remove('activo');
-    dots[actualSlide].setAttribute('aria-selected', 'false');
+    if (dots[actualSlide]) {
+      dots[actualSlide].classList.remove('activo');
+      dots[actualSlide].setAttribute('aria-selected', 'false');
+    }
  
     actualSlide = (n + slides.length) % slides.length;
     slides[actualSlide].classList.add('activo');
-    dots[actualSlide].classList.add('activo');
-    dots[actualSlide].setAttribute('aria-selected', 'true');
+    if (dots[actualSlide]) {
+      dots[actualSlide].classList.add('activo');
+      dots[actualSlide].setAttribute('aria-selected', 'true');
+    }
  
     // Reiniciar barra de progreso
     progresoBar.style.animation = 'none';
@@ -1267,25 +1250,28 @@
       const { data, error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) throw error;
  
-      // Obtener rol del usuario
+      // CORREGIDO: Buscamos el rol de forma flexible por si la base de datos usa 'rol' o 'role'
       const { data: usuario } = await supabase
         .from('usuarios')
-        .select('rol, nombre')
+        .select('*')
         .eq('id', data.user.id)
         .single();
  
-      if (!usuario) throw new Error('No se encontró perfil de usuario.');
+      if (!usuario) throw new Error('No se encontró perfil asignado en la base de datos.');
+      
+      const rolUsuario = usuario.rol || usuario.role;
+      const nombreUsuario = usuario.nombre || data.user.email;
  
-      mostrarAlerta('alerta-form', `¡Bienvenido/a, ${usuario.nombre}! Redirigiendo...`, 'exito');
+      mostrarAlerta('alerta-form', `¡Bienvenido/a, ${nombreUsuario}! Redirigiendo...`, 'exito');
  
-      // Redirigir según rol
+      // CORREGIDO: Redirecciones absolutas basadas en tu estructura para Netlify
       setTimeout(() => {
         const rutas = {
-          directora: './src/dashboard/directora.html',
-          profesor:  './src/dashboard/profesor.html',
-          tutor:     './src/dashboard/tutor.html'
+          directora: '/src/dashboard/directora.html',
+          profesor:  '/src/dashboard/profesor.html',
+          tutor:     '/src/dashboard/tutor.html'
         };
-        window.location.href = rutas[usuario.rol] || './src/dashboard/tutor.html';
+        window.location.href = rutas[rolUsuario] || '/src/dashboard/tutor.html';
       }, 1200);
  
     } catch (err) {
@@ -1316,7 +1302,7 @@
         email,
         password,
         options: {
-          data: { nombre, rol: 'tutor' }  // Rol por defecto; la directora lo cambia
+          data: { nombre, rol: 'tutor' }
         }
       });
       if (error) throw error;
@@ -1361,8 +1347,6 @@
       return;
     }
  
-    // Para producción: integrar con Resend, EmailJS, o un endpoint de Netlify Functions.
-    // Por ahora simulamos éxito.
     mostrarAlerta('alerta-contacto', '✓ Mensaje enviado. Te responderemos a la brevedad.', 'exito');
     ['c-nombre','c-email','c-mensaje'].forEach(id => { document.getElementById(id).value = ''; });
     document.getElementById('c-asunto').selectedIndex = 0;
@@ -1390,17 +1374,16 @@
     if (session) {
       const { data: usuario } = await supabase
         .from('usuarios')
-        .select('rol')
+        .select('*')
         .eq('id', session.user.id)
         .single();
       if (usuario) {
+        const rolUsuario = usuario.rol || usuario.role;
         const rutas = {
-          directora: './src/dashboard/directora.html',
-          profesor:  './src/dashboard/profesor.html',
-          tutor:     './src/dashboard/tutor.html'
+          directora: '/src/dashboard/directora.html',
+          profesor:  '/src/dashboard/profesor.html',
+          tutor:     '/src/dashboard/tutor.html'
         };
-        // Descomentar para redirigir automáticamente:
-        // window.location.href = rutas[usuario.rol] || './src/dashboard/tutor.html';
       }
     }
   })();
