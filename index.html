@@ -1099,12 +1099,17 @@
 </footer>
  
 <script>
-  // ============================================================
+// ============================================================
   // CONFIGURACIÓN SUPABASE
   // ============================================================
   const SUPABASE_URL = 'https://niocbjukflwlytzxjwqk.supabase.co';         
   const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5pb2NianVrZmx3bHl0enhqd3FrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk4ODIyMjYsImV4cCI6MjA5NTQ1ODIyNn0.87H3pTRaY994AcXONtdBzxzmX5VExPoELtg6lzyba-U';
-  const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+ // Usamos una asignación segura para no chocar con variables globales del navegador
+  if (!window.supabaseClient) {
+    window.supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  }
+  // En vez de usar 'const', usamos 'var' o directamente la asignamos globalmente
+  window.supabase = window.supabaseClient;
  
   // ============================================================
   // NAVBAR: sombra al hacer scroll
