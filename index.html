@@ -1,0 +1,1411 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Instituto Educativo — Excelencia Académica</title>
+  <meta name="description" content="Formando líderes del mañana con educación de calidad, valores y excelencia académica." />
+ 
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+ 
+  <!-- Supabase JS SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+ 
+  <style>
+    /* ===== RESET & VARIABLES ===== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+ 
+    :root {
+      --naranja:      #D35400;
+      --naranja-claro:#E67E22;
+      --naranja-suave:#FDF0E6;
+      --blanco:       #FFFFFF;
+      --gris-10:      #F8F7F5;
+      --gris-20:      #EEECE8;
+      --gris-40:      #C2BFB8;
+      --gris-60:      #8A8780;
+      --gris-80:      #3D3C39;
+      --negro:        #1A1917;
+      --sombra-sm:    0 1px 3px rgba(0,0,0,0.08);
+      --sombra-md:    0 4px 16px rgba(0,0,0,0.10);
+      --radio:        8px;
+      --radio-lg:     16px;
+      --fuente-display: 'Playfair Display', Georgia, serif;
+      --fuente-cuerpo: 'DM Sans', system-ui, sans-serif;
+    }
+ 
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--fuente-cuerpo);
+      font-size: 16px;
+      line-height: 1.65;
+      color: var(--gris-80);
+      background: var(--blanco);
+    }
+ 
+    img { display: block; max-width: 100%; }
+    a { color: inherit; text-decoration: none; }
+ 
+    /* ===== UTILIDADES ===== */
+    .contenedor { max-width: 1160px; margin: 0 auto; padding: 0 24px; }
+    .seccion    { padding: 96px 0; }
+    .seccion-gris { background: var(--gris-10); }
+ 
+    .etiqueta {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--naranja);
+      margin-bottom: 12px;
+    }
+ 
+    h2.titulo-seccion {
+      font-family: var(--fuente-display);
+      font-size: clamp(28px, 4vw, 44px);
+      font-weight: 700;
+      color: var(--negro);
+      line-height: 1.2;
+      margin-bottom: 16px;
+    }
+ 
+    .subtitulo {
+      font-size: 17px;
+      color: var(--gris-60);
+      max-width: 560px;
+      line-height: 1.7;
+    }
+ 
+    .boton {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 28px;
+      border-radius: var(--radio);
+      font-family: var(--fuente-cuerpo);
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: all 0.22s ease;
+      text-decoration: none;
+    }
+ 
+    .boton-primario {
+      background: var(--naranja);
+      color: var(--blanco);
+      border-color: var(--naranja);
+    }
+    .boton-primario:hover {
+      background: #B94A00;
+      border-color: #B94A00;
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(211,84,0,0.30);
+    }
+ 
+    .boton-secundario {
+      background: transparent;
+      color: var(--naranja);
+      border-color: var(--naranja);
+    }
+    .boton-secundario:hover {
+      background: var(--naranja-suave);
+      transform: translateY(-1px);
+    }
+ 
+    /* ===== NAVBAR ===== */
+    .navbar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 1000;
+      background: rgba(255,255,255,0.95);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--gris-20);
+      transition: box-shadow 0.3s;
+    }
+    .navbar.scrolled { box-shadow: var(--sombra-md); }
+ 
+    .navbar-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 68px;
+    }
+ 
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .logo-icono {
+      width: 40px;
+      height: 40px;
+      background: var(--naranja);
+      border-radius: var(--radio);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .logo-icono svg { width: 22px; height: 22px; fill: white; }
+    .logo-texto {
+      font-family: var(--fuente-display);
+      font-size: 19px;
+      font-weight: 700;
+      color: var(--negro);
+    }
+    .logo-texto span { color: var(--naranja); }
+ 
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+      list-style: none;
+    }
+    .nav-links a {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--gris-60);
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--naranja); }
+ 
+    .nav-acciones {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+ 
+    .nav-menu-btn {
+      display: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px;
+    }
+ 
+    /* ===== HÉROE ===== */
+    .hero {
+      padding-top: 120px;
+      padding-bottom: 0;
+      background: var(--blanco);
+      overflow: hidden;
+    }
+ 
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 64px;
+      align-items: center;
+      padding-bottom: 80px;
+    }
+ 
+    .hero-kicker {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .hero-kicker-linea {
+      width: 32px;
+      height: 2px;
+      background: var(--naranja);
+    }
+    .hero-kicker-texto {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--naranja);
+    }
+ 
+    .hero h1 {
+      font-family: var(--fuente-display);
+      font-size: clamp(36px, 5vw, 58px);
+      font-weight: 700;
+      color: var(--negro);
+      line-height: 1.12;
+      margin-bottom: 22px;
+    }
+    .hero h1 em {
+      font-style: normal;
+      color: var(--naranja);
+    }
+ 
+    .hero-descripcion {
+      font-size: 17px;
+      color: var(--gris-60);
+      line-height: 1.7;
+      margin-bottom: 36px;
+      max-width: 440px;
+    }
+ 
+    .hero-stats {
+      display: flex;
+      gap: 32px;
+      margin-top: 48px;
+      padding-top: 32px;
+      border-top: 1px solid var(--gris-20);
+    }
+    .stat-item {}
+    .stat-numero {
+      font-family: var(--fuente-display);
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--negro);
+      line-height: 1;
+    }
+    .stat-numero span { color: var(--naranja); }
+    .stat-label {
+      font-size: 13px;
+      color: var(--gris-60);
+      margin-top: 4px;
+    }
+ 
+    .hero-imagen {
+      position: relative;
+      border-radius: var(--radio-lg);
+      overflow: hidden;
+      aspect-ratio: 5/4;
+      background: var(--gris-20);
+    }
+    .hero-imagen img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .hero-badge {
+      position: absolute;
+      bottom: 24px;
+      left: 24px;
+      background: white;
+      border-radius: var(--radio);
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: var(--sombra-md);
+    }
+    .hero-badge-icono {
+      width: 40px;
+      height: 40px;
+      background: var(--naranja-suave);
+      border-radius: var(--radio);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .hero-badge-titulo { font-size: 13px; font-weight: 600; color: var(--negro); }
+    .hero-badge-sub    { font-size: 12px; color: var(--gris-60); }
+    .hero-badge-icono svg { width: 20px; height: 20px; fill: var(--naranja); }
+ 
+    /* ===== CARRUSEL ===== */
+    .carrusel-wrapper {
+      position: relative;
+      background: var(--negro);
+      overflow: hidden;
+    }
+ 
+    .carrusel {
+      position: relative;
+      width: 100%;
+      height: 520px;
+      overflow: hidden;
+    }
+ 
+    .carrusel-slide {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      opacity: 0;
+      transition: opacity 0.8s ease, transform 0.8s ease;
+      transform: scale(1.03);
+    }
+    .carrusel-slide.activo {
+      opacity: 1;
+      transform: scale(1);
+      z-index: 1;
+    }
+    .carrusel-slide.saliendo {
+      opacity: 0;
+      transform: scale(0.97);
+      z-index: 0;
+    }
+ 
+    .carrusel-slide img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+ 
+    .carrusel-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to right, rgba(0,0,0,0.60) 0%, rgba(0,0,0,0.15) 60%, transparent 100%);
+      z-index: 2;
+    }
+ 
+    .carrusel-caption {
+      position: absolute;
+      bottom: 0; left: 0;
+      z-index: 3;
+      padding: 48px 56px;
+      max-width: 500px;
+    }
+    .carrusel-caption-tag {
+      display: inline-block;
+      background: var(--naranja);
+      color: white;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 4px 12px;
+      border-radius: 4px;
+      margin-bottom: 12px;
+    }
+    .carrusel-caption h3 {
+      font-family: var(--fuente-display);
+      font-size: clamp(22px, 3vw, 32px);
+      font-weight: 700;
+      color: white;
+      line-height: 1.2;
+      margin-bottom: 10px;
+    }
+    .carrusel-caption p {
+      font-size: 15px;
+      color: rgba(255,255,255,0.80);
+      line-height: 1.6;
+    }
+ 
+    .carrusel-controles {
+      position: absolute;
+      right: 40px;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 4;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+ 
+    .carrusel-btn {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.30);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background 0.2s;
+      backdrop-filter: blur(4px);
+    }
+    .carrusel-btn:hover { background: var(--naranja); border-color: var(--naranja); }
+    .carrusel-btn svg { width: 18px; height: 18px; stroke: white; fill: none; stroke-width: 2.5; }
+ 
+    .carrusel-dots {
+      position: absolute;
+      bottom: 24px;
+      right: 40px;
+      z-index: 4;
+      display: flex;
+      gap: 8px;
+    }
+    .carrusel-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.35);
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .carrusel-dot.activo {
+      background: var(--naranja);
+      transform: scale(1.3);
+    }
+ 
+    .carrusel-progreso {
+      position: absolute;
+      bottom: 0; left: 0;
+      height: 3px;
+      background: var(--naranja);
+      z-index: 5;
+      animation: progreso 5s linear infinite;
+    }
+    @keyframes progreso { from { width: 0%; } to { width: 100%; } }
+ 
+    /* ===== SECCIÓN: PROPUESTA DE VALOR ===== */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 24px;
+      margin-top: 56px;
+    }
+ 
+    .card-valor {
+      background: var(--blanco);
+      border: 1px solid var(--gris-20);
+      border-radius: var(--radio-lg);
+      padding: 32px;
+      transition: box-shadow 0.25s, transform 0.25s;
+    }
+    .card-valor:hover {
+      box-shadow: var(--sombra-md);
+      transform: translateY(-3px);
+    }
+    .card-valor-icono {
+      width: 52px;
+      height: 52px;
+      background: var(--naranja-suave);
+      border-radius: var(--radio);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+    .card-valor-icono svg { width: 26px; height: 26px; fill: var(--naranja); }
+    .card-valor h3 {
+      font-size: 17px;
+      font-weight: 600;
+      color: var(--negro);
+      margin-bottom: 10px;
+    }
+    .card-valor p {
+      font-size: 14px;
+      color: var(--gris-60);
+      line-height: 1.65;
+    }
+ 
+    /* ===== PORTAL DE ACCESO ===== */
+    .acceso-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 64px;
+      align-items: center;
+    }
+ 
+    .acceso-formulario {
+      background: var(--blanco);
+      border: 1px solid var(--gris-20);
+      border-radius: var(--radio-lg);
+      padding: 40px;
+      box-shadow: var(--sombra-sm);
+    }
+ 
+    .form-titulo {
+      font-family: var(--fuente-display);
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--negro);
+      margin-bottom: 6px;
+    }
+    .form-subtitulo {
+      font-size: 14px;
+      color: var(--gris-60);
+      margin-bottom: 28px;
+    }
+ 
+    .form-grupo {
+      margin-bottom: 18px;
+    }
+    .form-grupo label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--gris-80);
+      margin-bottom: 6px;
+    }
+    .form-grupo input,
+    .form-grupo select {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1.5px solid var(--gris-20);
+      border-radius: var(--radio);
+      font-family: var(--fuente-cuerpo);
+      font-size: 15px;
+      color: var(--negro);
+      background: var(--gris-10);
+      transition: border-color 0.2s, box-shadow 0.2s;
+      outline: none;
+    }
+    .form-grupo input:focus,
+    .form-grupo select:focus {
+      border-color: var(--naranja);
+      box-shadow: 0 0 0 3px rgba(211,84,0,0.12);
+      background: var(--blanco);
+    }
+ 
+    .form-separador {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin: 22px 0;
+    }
+    .form-separador-linea { flex: 1; height: 1px; background: var(--gris-20); }
+    .form-separador-texto { font-size: 12px; color: var(--gris-40); }
+ 
+    .form-alerta {
+      display: none;
+      padding: 12px 16px;
+      border-radius: var(--radio);
+      font-size: 14px;
+      margin-bottom: 16px;
+    }
+    .form-alerta.exito { background: #EDFAF1; color: #1A6B38; border: 1px solid #9FE1CB; display: block; }
+    .form-alerta.error { background: #FEECEC; color: #8B2121; border: 1px solid #F09595; display: block; }
+ 
+    .form-cargando {
+      display: none;
+      text-align: center;
+      padding: 12px;
+      font-size: 14px;
+      color: var(--gris-60);
+    }
+ 
+    .tabs {
+      display: flex;
+      gap: 4px;
+      background: var(--gris-10);
+      padding: 4px;
+      border-radius: var(--radio);
+      margin-bottom: 24px;
+    }
+    .tab {
+      flex: 1;
+      padding: 8px;
+      text-align: center;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--gris-60);
+      cursor: pointer;
+      border-radius: 6px;
+      transition: all 0.2s;
+      border: none;
+      background: transparent;
+    }
+    .tab.activa {
+      background: var(--blanco);
+      color: var(--naranja);
+      box-shadow: var(--sombra-sm);
+    }
+ 
+    /* ===== SECCIÓN CONTACTO ===== */
+    .contacto-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.4fr;
+      gap: 64px;
+      align-items: start;
+    }
+ 
+    .contacto-info h2 {
+      font-family: var(--fuente-display);
+      font-size: 36px;
+      font-weight: 700;
+      color: var(--negro);
+      margin-bottom: 16px;
+      line-height: 1.2;
+    }
+    .contacto-info p {
+      color: var(--gris-60);
+      margin-bottom: 32px;
+    }
+ 
+    .contacto-items {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .contacto-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+    }
+    .contacto-item-icono {
+      width: 44px;
+      height: 44px;
+      flex-shrink: 0;
+      background: var(--naranja-suave);
+      border-radius: var(--radio);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .contacto-item-icono svg { width: 20px; height: 20px; fill: var(--naranja); }
+    .contacto-item-label { font-size: 12px; font-weight: 600; color: var(--gris-40); text-transform: uppercase; letter-spacing: 0.08em; }
+    .contacto-item-valor { font-size: 15px; color: var(--negro); margin-top: 2px; }
+ 
+    .contacto-form textarea {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1.5px solid var(--gris-20);
+      border-radius: var(--radio);
+      font-family: var(--fuente-cuerpo);
+      font-size: 15px;
+      color: var(--negro);
+      background: var(--gris-10);
+      resize: vertical;
+      min-height: 120px;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .contacto-form textarea:focus {
+      border-color: var(--naranja);
+      box-shadow: 0 0 0 3px rgba(211,84,0,0.12);
+      background: var(--blanco);
+    }
+ 
+    /* ===== FOOTER ===== */
+    .footer {
+      background: var(--negro);
+      color: rgba(255,255,255,0.55);
+      padding: 64px 0 32px;
+    }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 48px;
+      margin-bottom: 48px;
+    }
+    .footer-logo { font-family: var(--fuente-display); font-size: 22px; color: white; margin-bottom: 12px; }
+    .footer-logo span { color: var(--naranja-claro); }
+    .footer-desc { font-size: 14px; line-height: 1.65; }
+    .footer-col-titulo { font-size: 13px; font-weight: 600; color: white; margin-bottom: 16px; text-transform: uppercase; letter-spacing: 0.08em; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 10px; }
+    .footer-col a { font-size: 14px; color: rgba(255,255,255,0.55); transition: color 0.2s; }
+    .footer-col a:hover { color: var(--naranja-claro); }
+    .footer-divider { border: none; border-top: 1px solid rgba(255,255,255,0.08); margin-bottom: 24px; }
+    .footer-bottom { display: flex; justify-content: space-between; align-items: center; font-size: 13px; }
+ 
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 768px) {
+      .nav-links, .nav-acciones .boton { display: none; }
+      .nav-menu-btn { display: block; }
+      .hero-grid { grid-template-columns: 1fr; gap: 40px; }
+      .hero-imagen { aspect-ratio: 4/3; }
+      .hero-stats { gap: 20px; }
+      .carrusel { height: 360px; }
+      .carrusel-caption { padding: 28px 24px; }
+      .carrusel-controles { right: 16px; }
+      .carrusel-dots { right: 16px; }
+      .acceso-grid { grid-template-columns: 1fr; }
+      .contacto-grid { grid-template-columns: 1fr; }
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+      .footer-bottom { flex-direction: column; gap: 12px; text-align: center; }
+    }
+ 
+    /* ===== ANIMACIONES DE ENTRADA ===== */
+    .animar-entrada {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .animar-entrada.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body>
+ 
+<!-- ===== NAVBAR ===== -->
+<nav class="navbar" id="navbar">
+  <div class="contenedor">
+    <div class="navbar-inner">
+      <a href="/" class="logo">
+        <div class="logo-icono">
+          <svg viewBox="0 0 24 24"><path d="M12 3L4 9V21H9V15H15V21H20V9L12 3Z"/></svg>
+        </div>
+        <span class="logo-texto">Instituto<span>Edu</span></span>
+      </a>
+ 
+      <ul class="nav-links">
+        <li><a href="#inicio">Inicio</a></li>
+        <li><a href="#nosotros">Nosotros</a></li>
+        <li><a href="#instalaciones">Instalaciones</a></li>
+        <li><a href="#contacto">Contacto</a></li>
+      </ul>
+ 
+      <div class="nav-acciones">
+        <a href="./src/auth/login.html" class="boton boton-secundario" style="padding: 10px 20px; font-size: 14px;">Iniciar sesión</a>
+        <button class="nav-menu-btn" aria-label="Menú">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</nav>
+ 
+<!-- ===== HÉROE ===== -->
+<section class="hero" id="inicio">
+  <div class="contenedor">
+    <div class="hero-grid">
+      <div>
+        <div class="hero-kicker">
+          <div class="hero-kicker-linea"></div>
+          <span class="hero-kicker-texto">Educación de Excelencia</span>
+        </div>
+        <h1>Formamos líderes del <em>mañana</em> con valores sólidos</h1>
+        <p class="hero-descripcion">
+          Un espacio de aprendizaje donde cada estudiante encuentra su potencial, guiado por docentes comprometidos con la excelencia académica y el desarrollo integral.
+        </p>
+        <div style="display: flex; gap: 14px; flex-wrap: wrap;">
+          <a href="#contacto" class="boton boton-primario">Solicitar información</a>
+          <a href="#instalaciones" class="boton boton-secundario">Ver instalaciones</a>
+        </div>
+        <div class="hero-stats">
+          <div class="stat-item">
+            <div class="stat-numero">15<span>+</span></div>
+            <div class="stat-label">Años de trayectoria</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-numero">420<span>+</span></div>
+            <div class="stat-label">Alumnos activos</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-numero">98<span>%</span></div>
+            <div class="stat-label">Satisfacción familiar</div>
+          </div>
+        </div>
+      </div>
+ 
+      <div class="hero-imagen">
+        <!-- Reemplazar src con imágenes reales del instituto -->
+        <img src="https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=800&q=80" alt="Instalaciones del instituto" />
+        <div class="hero-badge">
+          <div class="hero-badge-icono">
+            <svg viewBox="0 0 24 24"><path d="M5 3l14 9-14 9V3z"/></svg>
+          </div>
+          <div>
+            <div class="hero-badge-titulo">Portal académico</div>
+            <div class="hero-badge-sub">Disponible 24/7 para familias</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+ 
+<!-- ===== CARRUSEL ===== -->
+<section id="instalaciones">
+  <div class="carrusel-wrapper">
+    <div class="carrusel" id="carrusel"
+         role="region"
+         aria-label="Galería de instalaciones"
+         aria-roledescription="carrusel">
+ 
+      <!-- SLIDE 1 -->
+      <div class="carrusel-slide activo" aria-label="Diapositiva 1 de 5">
+        <img src="https://images.unsplash.com/photo-1509062522246-3755977927d7?w=1400&q=80" alt="Aulas modernas y equipadas" />
+        <div class="carrusel-overlay"></div>
+        <div class="carrusel-caption">
+          <span class="carrusel-caption-tag">Infraestructura</span>
+          <h3>Aulas modernas y completamente equipadas</h3>
+          <p>Espacios diseñados para potenciar el aprendizaje activo y la concentración.</p>
+        </div>
+      </div>
+ 
+      <!-- SLIDE 2 -->
+      <div class="carrusel-slide" aria-label="Diapositiva 2 de 5">
+        <img src="https://images.unsplash.com/photo-1544717302-de2939b7ef71?w=1400&q=80" alt="Laboratorio de ciencias" />
+        <div class="carrusel-overlay"></div>
+        <div class="carrusel-caption">
+          <span class="carrusel-caption-tag">Laboratorios</span>
+          <h3>Laboratorio de ciencias de última generación</h3>
+          <p>Instalaciones que permiten aprender haciendo, con seguridad y tecnología.</p>
+        </div>
+      </div>
+ 
+      <!-- SLIDE 3 -->
+      <div class="carrusel-slide" aria-label="Diapositiva 3 de 5">
+        <img src="https://images.unsplash.com/photo-1497633762265-9d179a990aa6?w=1400&q=80" alt="Biblioteca y sala de estudio" />
+        <div class="carrusel-overlay"></div>
+        <div class="carrusel-caption">
+          <span class="carrusel-caption-tag">Biblioteca</span>
+          <h3>Centro de recursos y sala de estudio</h3>
+          <p>Más de 5.000 títulos físicos y acceso a recursos digitales ilimitados.</p>
+        </div>
+      </div>
+ 
+      <!-- SLIDE 4 -->
+      <div class="carrusel-slide" aria-label="Diapositiva 4 de 5">
+        <img src="https://images.unsplash.com/photo-1571260899304-425eee4c7efc?w=1400&q=80" alt="Actividades deportivas" />
+        <div class="carrusel-overlay"></div>
+        <div class="carrusel-caption">
+          <span class="carrusel-caption-tag">Deportes</span>
+          <h3>Instalaciones deportivas completas</h3>
+          <p>Canchas multiuso, gimnasio cubierto y piscina semiolímpica.</p>
+        </div>
+      </div>
+ 
+      <!-- SLIDE 5 -->
+      <div class="carrusel-slide" aria-label="Diapositiva 5 de 5">
+        <img src="https://images.unsplash.com/photo-1577896851231-70ef18881754?w=1400&q=80" alt="Eventos y actos escolares" />
+        <div class="carrusel-overlay"></div>
+        <div class="carrusel-caption">
+          <span class="carrusel-caption-tag">Comunidad</span>
+          <h3>Eventos y vida institucional activa</h3>
+          <p>Actos, ferias de ciencia, teatro y actividades que enriquecen la formación.</p>
+        </div>
+      </div>
+ 
+      <!-- Controles -->
+      <div class="carrusel-controles" aria-label="Controles del carrusel">
+        <button class="carrusel-btn" id="btn-prev" aria-label="Diapositiva anterior">
+          <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <button class="carrusel-btn" id="btn-next" aria-label="Siguiente diapositiva">
+          <svg viewBox="0 0 24 24"><polyline points="9 6 15 12 9 18"/></svg>
+        </button>
+      </div>
+ 
+      <!-- Puntos indicadores -->
+      <div class="carrusel-dots" id="carrusel-dots" role="tablist" aria-label="Navegar a diapositiva"></div>
+ 
+      <!-- Barra de progreso -->
+      <div class="carrusel-progreso" id="progreso-bar"></div>
+    </div>
+  </div>
+</section>
+ 
+<!-- ===== PROPUESTA DE VALOR ===== -->
+<section class="seccion seccion-gris" id="nosotros">
+  <div class="contenedor">
+    <div class="animar-entrada">
+      <span class="etiqueta">¿Por qué elegirnos?</span>
+      <h2 class="titulo-seccion">Una educación que marca la diferencia</h2>
+      <p class="subtitulo">Combinamos rigor académico, formación en valores y tecnología educativa para que cada alumno alcance su máximo potencial.</p>
+    </div>
+    <div class="cards-grid">
+      <div class="card-valor animar-entrada">
+        <div class="card-valor-icono">
+          <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+        </div>
+        <h3>Excelencia académica</h3>
+        <p>Currículo actualizado, docentes titulados y metodologías activas que preparan a los alumnos para los desafíos del siglo XXI.</p>
+      </div>
+      <div class="card-valor animar-entrada">
+        <div class="card-valor-icono">
+          <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </div>
+        <h3>Comunidad educativa</h3>
+        <p>Un entorno de pertenencia donde alumnos, familias y docentes trabajan juntos con objetivos compartidos y comunicación fluida.</p>
+      </div>
+      <div class="card-valor animar-entrada">
+        <div class="card-valor-icono">
+          <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+        </div>
+        <h3>Tecnología educativa</h3>
+        <p>Portal académico digital con acceso a horarios, materiales, cuotas y comunicación institucional desde cualquier dispositivo.</p>
+      </div>
+      <div class="card-valor animar-entrada">
+        <div class="card-valor-icono">
+          <svg viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m6 2a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"/></svg>
+        </div>
+        <h3>Transparencia total</h3>
+        <p>Los tutores tienen acceso en tiempo real al estado de cuotas, historial de pagos y materiales educativos de sus hijos.</p>
+      </div>
+    </div>
+  </div>
+</section>
+ 
+<!-- ===== PORTAL DE ACCESO (Login/Registro) ===== -->
+<section class="seccion">
+  <div class="contenedor">
+    <div class="acceso-grid">
+      <div class="animar-entrada">
+        <span class="etiqueta">Portal Académico</span>
+        <h2 class="titulo-seccion">Accedé a tu panel personalizado</h2>
+        <p class="subtitulo">Según tu rol —directora, profesor o tutor— tendrás acceso a las herramientas y la información que necesitás.</p>
+        <div style="margin-top: 32px; display: flex; flex-direction: column; gap: 14px;">
+          <div style="display: flex; align-items: center; gap: 12px; font-size: 14px; color: var(--gris-60);">
+            <span style="width: 24px; height: 24px; background: var(--naranja-suave); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="var(--naranja)"><path d="M20 6L9 17l-5-5"/></svg>
+            </span>
+            Directora: gestión completa de la institución
+          </div>
+          <div style="display: flex; align-items: center; gap: 12px; font-size: 14px; color: var(--gris-60);">
+            <span style="width: 24px; height: 24px; background: var(--naranja-suave); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="var(--naranja)"><path d="M20 6L9 17l-5-5"/></svg>
+            </span>
+            Profesores: horarios, alumnos y biblioteca digital
+          </div>
+          <div style="display: flex; align-items: center; gap: 12px; font-size: 14px; color: var(--gris-60);">
+            <span style="width: 24px; height: 24px; background: var(--naranja-suave); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="var(--naranja)"><path d="M20 6L9 17l-5-5"/></svg>
+            </span>
+            Tutores: finanzas, materiales y horarios de sus hijos
+          </div>
+        </div>
+      </div>
+ 
+      <div class="acceso-formulario animar-entrada" id="form-acceso">
+        <div class="tabs">
+          <button class="tab activa" id="tab-login" onclick="cambiarTab('login')">Iniciar sesión</button>
+          <button class="tab" id="tab-registro" onclick="cambiarTab('registro')">Registrarse</button>
+        </div>
+ 
+        <div id="alerta-form" class="form-alerta" role="alert"></div>
+        <div id="cargando" class="form-cargando">⏳ Procesando...</div>
+ 
+        <!-- FORMULARIO LOGIN -->
+        <div id="panel-login">
+          <p class="form-subtitulo">Ingresá con tu cuenta institucional</p>
+          <div class="form-grupo">
+            <label for="login-email">Correo electrónico</label>
+            <input type="email" id="login-email" placeholder="nombre@escuela.com" autocomplete="email" />
+          </div>
+          <div class="form-grupo">
+            <label for="login-password">Contraseña</label>
+            <input type="password" id="login-password" placeholder="••••••••" autocomplete="current-password" />
+          </div>
+          <button class="boton boton-primario" style="width:100%; justify-content: center; margin-top: 8px;" onclick="iniciarSesion()">
+            Ingresar al portal
+          </button>
+          <div style="text-align: center; margin-top: 14px;">
+            <a href="#" id="link-recovery" style="font-size: 13px; color: var(--naranja);">Olvidé mi contraseña</a>
+          </div>
+        </div>
+ 
+        <!-- FORMULARIO REGISTRO -->
+        <div id="panel-registro" style="display:none;">
+          <p class="form-subtitulo">Creá tu cuenta como tutor/apoderado</p>
+          <div class="form-grupo">
+            <label for="reg-nombre">Nombre completo</label>
+            <input type="text" id="reg-nombre" placeholder="María González" autocomplete="name" />
+          </div>
+          <div class="form-grupo">
+            <label for="reg-email">Correo electrónico</label>
+            <input type="email" id="reg-email" placeholder="nombre@email.com" autocomplete="email" />
+          </div>
+          <div class="form-grupo">
+            <label for="reg-password">Contraseña</label>
+            <input type="password" id="reg-password" placeholder="Mínimo 8 caracteres" autocomplete="new-password" />
+          </div>
+          <button class="boton boton-primario" style="width:100%; justify-content: center; margin-top: 8px;" onclick="registrarse()">
+            Crear cuenta
+          </button>
+          <p style="font-size: 12px; color: var(--gris-40); text-align: center; margin-top: 12px;">
+            Los roles de profesor y directora son asignados por administración.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+ 
+<!-- ===== CONTACTO ===== -->
+<section class="seccion seccion-gris" id="contacto">
+  <div class="contenedor">
+    <div class="contacto-grid">
+      <div class="animar-entrada">
+        <span class="etiqueta">Contacto</span>
+        <h2>¿Tenés alguna consulta?</h2>
+        <p>Estamos para ayudarte. Completá el formulario o comunicate directamente por nuestros canales de atención.</p>
+        <div class="contacto-items">
+          <div class="contacto-item">
+            <div class="contacto-item-icono">
+              <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            </div>
+            <div>
+              <div class="contacto-item-label">Dirección</div>
+              <div class="contacto-item-valor">Av. Educación 1234, Ciudad</div>
+            </div>
+          </div>
+          <div class="contacto-item">
+            <div class="contacto-item-icono">
+              <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.65 3.28 2 2 0 0 1 3.62 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.59a16 16 0 0 0 6.29 6.29l.96-.96a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            </div>
+            <div>
+              <div class="contacto-item-label">Teléfono</div>
+              <div class="contacto-item-valor">+54 11 1234-5678</div>
+            </div>
+          </div>
+          <div class="contacto-item">
+            <div class="contacto-item-icono">
+              <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            </div>
+            <div>
+              <div class="contacto-item-label">Email</div>
+              <div class="contacto-item-valor">info@institutoedu.com</div>
+            </div>
+          </div>
+        </div>
+      </div>
+ 
+      <div class="animar-entrada">
+        <div class="acceso-formulario contacto-form">
+          <div id="alerta-contacto" class="form-alerta" role="alert"></div>
+          <div class="form-grupo">
+            <label for="c-nombre">Nombre y apellido</label>
+            <input type="text" id="c-nombre" placeholder="Tu nombre completo" />
+          </div>
+          <div class="form-grupo">
+            <label for="c-email">Correo electrónico</label>
+            <input type="email" id="c-email" placeholder="nombre@email.com" />
+          </div>
+          <div class="form-grupo">
+            <label for="c-asunto">Asunto</label>
+            <select id="c-asunto">
+              <option value="">Seleccioná un asunto</option>
+              <option>Inscripción / Matrícula</option>
+              <option>Información de cuotas</option>
+              <option>Solicitud de becas</option>
+              <option>Consulta general</option>
+            </select>
+          </div>
+          <div class="form-grupo">
+            <label for="c-mensaje">Mensaje</label>
+            <textarea id="c-mensaje" placeholder="Escribí tu consulta aquí..."></textarea>
+          </div>
+          <button class="boton boton-primario" style="width:100%; justify-content: center;" onclick="enviarContacto()">
+            Enviar mensaje
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+ 
+<!-- ===== FOOTER ===== -->
+<footer class="footer">
+  <div class="contenedor">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-logo">Instituto<span>Edu</span></div>
+        <p class="footer-desc">Formando ciudadanos íntegros y profesionales competentes desde 2009. Una institución comprometida con la excelencia educativa.</p>
+      </div>
+      <div class="footer-col">
+        <div class="footer-col-titulo">Institución</div>
+        <ul>
+          <li><a href="#">Historia</a></li>
+          <li><a href="#">Misión y visión</a></li>
+          <li><a href="#">Cuerpo docente</a></li>
+          <li><a href="#">Acreditaciones</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <div class="footer-col-titulo">Académico</div>
+        <ul>
+          <li><a href="#">Nivel primario</a></li>
+          <li><a href="#">Nivel secundario</a></li>
+          <li><a href="#">Extracurriculares</a></li>
+          <li><a href="#">Calendario escolar</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <div class="footer-col-titulo">Familias</div>
+        <ul>
+          <li><a href="#contacto">Inscripciones</a></li>
+          <li><a href="#">Portal de tutores</a></li>
+          <li><a href="#">Reglamento</a></li>
+          <li><a href="#">FAQ</a></li>
+        </ul>
+      </div>
+    </div>
+    <hr class="footer-divider" />
+    <div class="footer-bottom">
+      <span>© 2025 InstitutoEdu. Todos los derechos reservados.</span>
+      <span>Desarrollado con ❤️ para la comunidad educativa</span>
+    </div>
+  </div>
+</footer>
+ 
+<!-- ===== SCRIPTS ===== -->
+<script>
+  // ============================================================
+  // CONFIGURACIÓN SUPABASE
+  // ============================================================
+  const SUPABASE_URL = 'TU_SUPABASE_URL';         // Reemplazar con variable de entorno
+  const SUPABASE_ANON_KEY = 'TU_SUPABASE_ANON_KEY'; // Reemplazar con variable de entorno
+ 
+  // Para Netlify, estas variables llegan inyectadas en tiempo de build.
+  // Ver instrucciones de .env al final del README.
+  const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+ 
+  // ============================================================
+  // NAVBAR: sombra al hacer scroll
+  // ============================================================
+  window.addEventListener('scroll', () => {
+    document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 20);
+  });
+ 
+  // ============================================================
+  // CARRUSEL
+  // ============================================================
+  const slides     = document.querySelectorAll('.carrusel-slide');
+  const dotsContenedor = document.getElementById('carrusel-dots');
+  const progresoBar = document.getElementById('progreso-bar');
+  let actualSlide  = 0;
+  let intervalo    = null;
+  let tocandoPantalla = false;
+  let inicioToque  = 0;
+ 
+  // Crear dots dinámicamente
+  slides.forEach((_, i) => {
+    const dot = document.createElement('button');
+    dot.className = 'carrusel-dot' + (i === 0 ? ' activo' : '');
+    dot.setAttribute('role', 'tab');
+    dot.setAttribute('aria-label', `Ir a diapositiva ${i + 1}`);
+    dot.setAttribute('aria-selected', i === 0 ? 'true' : 'false');
+    dot.addEventListener('click', () => irASlide(i));
+    dotsContenedor.appendChild(dot);
+  });
+ 
+  function irASlide(n) {
+    slides[actualSlide].classList.remove('activo');
+    slides[actualSlide].classList.add('saliendo');
+    setTimeout(() => slides[actualSlide === n ? n : actualSlide].classList.remove('saliendo'), 800);
+ 
+    const dots = dotsContenedor.querySelectorAll('.carrusel-dot');
+    dots[actualSlide].classList.remove('activo');
+    dots[actualSlide].setAttribute('aria-selected', 'false');
+ 
+    actualSlide = (n + slides.length) % slides.length;
+    slides[actualSlide].classList.add('activo');
+    dots[actualSlide].classList.add('activo');
+    dots[actualSlide].setAttribute('aria-selected', 'true');
+ 
+    // Reiniciar barra de progreso
+    progresoBar.style.animation = 'none';
+    progresoBar.offsetHeight; // reflow
+    progresoBar.style.animation = '';
+  }
+ 
+  function siguiente() { irASlide(actualSlide + 1); }
+  function anterior()  { irASlide(actualSlide - 1); }
+ 
+  document.getElementById('btn-next').addEventListener('click', () => {
+    siguiente();
+    reiniciarIntervalo();
+  });
+  document.getElementById('btn-prev').addEventListener('click', () => {
+    anterior();
+    reiniciarIntervalo();
+  });
+ 
+  function iniciarIntervalo() {
+    intervalo = setInterval(siguiente, 5000);
+  }
+  function reiniciarIntervalo() {
+    clearInterval(intervalo);
+    iniciarIntervalo();
+  }
+  iniciarIntervalo();
+ 
+  // Pausa al hover
+  document.getElementById('carrusel').addEventListener('mouseenter', () => clearInterval(intervalo));
+  document.getElementById('carrusel').addEventListener('mouseleave', iniciarIntervalo);
+ 
+  // Soporte táctil
+  document.getElementById('carrusel').addEventListener('touchstart', e => {
+    tocandoPantalla = true;
+    inicioToque = e.touches[0].clientX;
+    clearInterval(intervalo);
+  }, { passive: true });
+ 
+  document.getElementById('carrusel').addEventListener('touchend', e => {
+    if (!tocandoPantalla) return;
+    const diff = inicioToque - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 50) {
+      diff > 0 ? siguiente() : anterior();
+    }
+    tocandoPantalla = false;
+    iniciarIntervalo();
+  });
+ 
+  // ============================================================
+  // TABS DEL FORMULARIO DE ACCESO
+  // ============================================================
+  function cambiarTab(tab) {
+    const esLogin = tab === 'login';
+    document.getElementById('tab-login').classList.toggle('activa', esLogin);
+    document.getElementById('tab-registro').classList.toggle('activa', !esLogin);
+    document.getElementById('panel-login').style.display    = esLogin ? 'block' : 'none';
+    document.getElementById('panel-registro').style.display = esLogin ? 'none'  : 'block';
+    limpiarAlerta('alerta-form');
+  }
+ 
+  // ============================================================
+  // HELPER: mostrar alertas
+  // ============================================================
+  function mostrarAlerta(id, mensaje, tipo) {
+    const el = document.getElementById(id);
+    el.textContent = mensaje;
+    el.className = `form-alerta ${tipo}`;
+  }
+  function limpiarAlerta(id) {
+    const el = document.getElementById(id);
+    el.textContent = '';
+    el.className = 'form-alerta';
+  }
+  function setCargando(visible) {
+    document.getElementById('cargando').style.display = visible ? 'block' : 'none';
+  }
+ 
+  // ============================================================
+  // AUTENTICACIÓN - SUPABASE AUTH
+  // ============================================================
+  async function iniciarSesion() {
+    const email    = document.getElementById('login-email').value.trim();
+    const password = document.getElementById('login-password').value;
+    limpiarAlerta('alerta-form');
+ 
+    if (!email || !password) {
+      mostrarAlerta('alerta-form', 'Por favor completá todos los campos.', 'error');
+      return;
+    }
+ 
+    setCargando(true);
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+      if (error) throw error;
+ 
+      // Obtener rol del usuario
+      const { data: usuario } = await supabase
+        .from('usuarios')
+        .select('rol, nombre')
+        .eq('id', data.user.id)
+        .single();
+ 
+      if (!usuario) throw new Error('No se encontró perfil de usuario.');
+ 
+      mostrarAlerta('alerta-form', `¡Bienvenido/a, ${usuario.nombre}! Redirigiendo...`, 'exito');
+ 
+      // Redirigir según rol
+      setTimeout(() => {
+        const rutas = {
+          directora: './src/dashboard/directora.html',
+          profesor:  './src/dashboard/profesor.html',
+          tutor:     './src/dashboard/tutor.html'
+        };
+        window.location.href = rutas[usuario.rol] || './src/dashboard/tutor.html';
+      }, 1200);
+ 
+    } catch (err) {
+      mostrarAlerta('alerta-form', err.message || 'Error al iniciar sesión.', 'error');
+    } finally {
+      setCargando(false);
+    }
+  }
+ 
+  async function registrarse() {
+    const nombre   = document.getElementById('reg-nombre').value.trim();
+    const email    = document.getElementById('reg-email').value.trim();
+    const password = document.getElementById('reg-password').value;
+    limpiarAlerta('alerta-form');
+ 
+    if (!nombre || !email || !password) {
+      mostrarAlerta('alerta-form', 'Por favor completá todos los campos.', 'error');
+      return;
+    }
+    if (password.length < 8) {
+      mostrarAlerta('alerta-form', 'La contraseña debe tener al menos 8 caracteres.', 'error');
+      return;
+    }
+ 
+    setCargando(true);
+    try {
+      const { error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: { nombre, rol: 'tutor' }  // Rol por defecto; la directora lo cambia
+        }
+      });
+      if (error) throw error;
+      mostrarAlerta('alerta-form', '✓ Cuenta creada. Revisá tu email para confirmar y luego iniciá sesión.', 'exito');
+    } catch (err) {
+      mostrarAlerta('alerta-form', err.message || 'Error al registrarse.', 'error');
+    } finally {
+      setCargando(false);
+    }
+  }
+ 
+  // Recuperación de contraseña
+  document.getElementById('link-recovery').addEventListener('click', async (e) => {
+    e.preventDefault();
+    const email = document.getElementById('login-email').value.trim();
+    if (!email) {
+      mostrarAlerta('alerta-form', 'Primero ingresá tu correo en el campo de arriba.', 'error');
+      return;
+    }
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/src/auth/reset-password.html`
+    });
+    if (error) {
+      mostrarAlerta('alerta-form', error.message, 'error');
+    } else {
+      mostrarAlerta('alerta-form', 'Te enviamos un email para restablecer tu contraseña.', 'exito');
+    }
+  });
+ 
+  // ============================================================
+  // FORMULARIO DE CONTACTO
+  // ============================================================
+  async function enviarContacto() {
+    const nombre  = document.getElementById('c-nombre').value.trim();
+    const email   = document.getElementById('c-email').value.trim();
+    const asunto  = document.getElementById('c-asunto').value;
+    const mensaje = document.getElementById('c-mensaje').value.trim();
+    limpiarAlerta('alerta-contacto');
+ 
+    if (!nombre || !email || !asunto || !mensaje) {
+      mostrarAlerta('alerta-contacto', 'Por favor completá todos los campos.', 'error');
+      return;
+    }
+ 
+    // Para producción: integrar con Resend, EmailJS, o un endpoint de Netlify Functions.
+    // Por ahora simulamos éxito.
+    mostrarAlerta('alerta-contacto', '✓ Mensaje enviado. Te responderemos a la brevedad.', 'exito');
+    ['c-nombre','c-email','c-mensaje'].forEach(id => { document.getElementById(id).value = ''; });
+    document.getElementById('c-asunto').selectedIndex = 0;
+  }
+ 
+  // ============================================================
+  // ANIMACIONES DE ENTRADA (Intersection Observer)
+  // ============================================================
+  const observador = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observador.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+ 
+  document.querySelectorAll('.animar-entrada').forEach(el => observador.observe(el));
+ 
+  // ============================================================
+  // VERIFICAR SESIÓN ACTIVA (si ya está logueado, redirigir)
+  // ============================================================
+  (async () => {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (session) {
+      const { data: usuario } = await supabase
+        .from('usuarios')
+        .select('rol')
+        .eq('id', session.user.id)
+        .single();
+      if (usuario) {
+        const rutas = {
+          directora: './src/dashboard/directora.html',
+          profesor:  './src/dashboard/profesor.html',
+          tutor:     './src/dashboard/tutor.html'
+        };
+        // Descomentar para redirigir automáticamente:
+        // window.location.href = rutas[usuario.rol] || './src/dashboard/tutor.html';
+      }
+    }
+  })();
+</script>
+ 
+</body>
+</html>
